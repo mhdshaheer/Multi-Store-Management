@@ -1,0 +1,66 @@
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/out/
+backend/.cache/
+backend/coverage/
+
+# Logs
+backend/logs/
+backend/*.log
+backend/npm-debug.log*
+backend/yarn-error.log*
+backend/yarn-debug.log*
+backend/.pnpm-debug.log*
+
+# Runtime / pid files
+backend/*.pid
+backend/*.seed
+backend/*.pid.lock
+
+# Environment secrets — keep .env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# TypeScript
+backend/**/*.js.map
+backend/**/*.d.ts.map
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Docker
+# ──────────────────────────────────────────────────────────────────────────────
+.dockerignore
+docker-compose.override.yml
+**/docker-compose.local.yml
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CI / CD
+# ──────────────────────────────────────────────────────────────────────────────
+.github/workflows/*.local.yml
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Terraform / Infrastructure
+# ──────────────────────────────────────────────────────────────────────────────
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Miscellaneous secrets & generated files
+# ──────────────────────────────────────────────────────────────────────────────
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+secrets/
+*.secret
