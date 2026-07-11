@@ -1,9 +1,9 @@
-import mongoose, { Model, Types } from "mongoose";
-export interface IUser {
-  _id?: Types.ObjectId;
-  fullName?: string;
-  username?: string;
+import mongoose, { Document, Model, Types } from "mongoose";
+export interface IUser extends Document {
+  name: string;
   email: string;
+  password: string;
+  role: "ADMIN" | "USER";
 }
 const userSchema = new mongoose.Schema(
   {
@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      default: "USER",
     },
   },
   { timestamps: true },

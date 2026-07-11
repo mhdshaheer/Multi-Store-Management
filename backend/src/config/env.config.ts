@@ -11,4 +11,10 @@ export const env = {
   get REDIS_URL() {
     return process.env.REDIS_URL;
   },
+  get MAIL_USER() {
+    return process.env.MAIL_USER;
+  },
+  get MAIL_PASSWORD() {
+    return process.env.MAIL_PASSWORD;
+  },
 };
