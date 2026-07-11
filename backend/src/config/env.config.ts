@@ -20,4 +20,13 @@ export const env = {
   get JWT_SECRET() {
     return process.env.JWT_SECRET;
   },
+  get ACCESS_TOKEN_SECRET() {
+    return process.env.ACCESS_TOKEN_SECRET;
+  },
+  get REFRESH_TOKEN_SECRET() {
+    return process.env.REFRESH_TOKEN_SECRET;
+  },
+  get NODE_ENV() {
+    return process.env.NODE_ENV;
+  },
 };

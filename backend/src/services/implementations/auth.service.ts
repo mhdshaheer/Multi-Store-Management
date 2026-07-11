@@ -6,7 +6,12 @@ import { redis_client } from "../../config/redis.config";
 import { IMailService } from "../interfaces/mail.service.interface";
 import { generateOTP } from "../../utils/otp";
 import { ResendOtpDto, VerifyOtpDto } from "../../dtos/otp.dto";
-import { generateToken } from "../../utils/jwt.utils";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  generateToken,
+} from "../../utils/jwt.utils";
+import { LoginDto } from "../../dtos/login.dto";
 
 export class AuthService implements IAuthService {
   constructor(
@@ -98,5 +103,24 @@ export class AuthService implements IAuthService {
     );
 
     await this._mailService.sendOtp(email, otp);
+  }
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { email, password } = loginDto;
+    const user = await this._userRepository.findByEmail(email);
+    if (!user) {
+      throw new Error("User is not exist");
+    }
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new Error("Password is incorrect");
+    }
+    const accessToken = generateAccessToken(user._id.toString(), user.role);
+    const refreshToken = generateRefreshToken(user._id.toString());
+    return {
+      accessToken: accessToken,
+      refreshToken: accessToken,
+    };
   }
 }

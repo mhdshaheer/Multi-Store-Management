@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IAuthService } from "../../services/interfaces/auth.service.interface";
 import { IAuthController } from "../interfaces/auth.controller.interface";
+import { env } from "../../config/env.config";
 
 export class AuthController implements IAuthController {
   constructor(private _authService: IAuthService) {}
@@ -60,6 +61,28 @@ export class AuthController implements IAuthController {
       res.status(200).json({
         success: true,
         message: "OTP sent successfully.",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { email, password } = req.body;
+      const token = await this._authService.login({
+        email,
+        password,
+      });
+      res.cookie("refreshToken", token.accessToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV == "production",
+        sameSite: "strict",
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+      res.status(200).json({
+        success: true,
+        message: "Login successful.",
       });
     } catch (error) {
       next(error);
