@@ -13,4 +13,10 @@ export class ProductRepository
     const product = await this.model.exists({ sku });
     return !!product;
   }
+  async findByName(name: string): Promise<IProduct | null> {
+    return await this.model.findOne({ name });
+  }
+  async findBySKU(sku: string): Promise<IProduct | null> {
+    return await this.model.findOne({ sku });
+  }
 }

@@ -16,7 +16,7 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     return await this.model.findByIdAndUpdate(
       id,
       { $set: data },
-      { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     );
   }
   async findById(id: string): Promise<T | null> {
