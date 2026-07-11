@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import { redis_client } from "../../config/redis.config";
 import { IMailService } from "../interfaces/mail.service.interface";
 import { generateOTP } from "../../utils/otp";
+import { VerifyOtpDto } from "../../dtos/otp.dto";
+import { generateToken } from "../../utils/jwt.utils";
 
 export class AuthService implements IAuthService {
   constructor(
@@ -48,5 +50,24 @@ export class AuthService implements IAuthService {
 
     // Sent mail
     await this._mailService.sendOtp(email, otp);
+  }
+  async verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<string> {
+    const { email, otp } = verifyOtpDto;
+    const redisData = await redis_client.get(`otp:${email}`);
+    if (!redisData) {
+      throw new Error("OTP expired.");
+    }
+    const userData = JSON.parse(redisData);
+    if (userData.otp !== otp) {
+      throw new Error("Invalid OTP.");
+    }
+    const createdUser = await this._userRepository.create({
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+    });
+    await redis_client.del(`otp:${email}`);
+    const token = generateToken(createdUser._id.toString(), createdUser.role);
+    return token;
   }
 }

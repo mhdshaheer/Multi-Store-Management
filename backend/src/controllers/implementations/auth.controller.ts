@@ -27,4 +27,25 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+
+  async verifyOtp(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { email, otp } = req.body;
+      const token = await this._authService.verifyOtp({
+        email,
+        otp,
+      });
+      res.status(201).json({
+        success: true,
+        message: "Registration Successful",
+        token,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -17,4 +17,7 @@ export const env = {
   get MAIL_PASSWORD() {
     return process.env.MAIL_PASSWORD;
   },
+  get JWT_SECRET() {
+    return process.env.JWT_SECRET;
+  },
 };
