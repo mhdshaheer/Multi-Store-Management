@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { redis_client } from "../../config/redis.config";
 import { IMailService } from "../interfaces/mail.service.interface";
 import { generateOTP } from "../../utils/otp";
-import { VerifyOtpDto } from "../../dtos/otp.dto";
+import { ResendOtpDto, VerifyOtpDto } from "../../dtos/otp.dto";
 import { generateToken } from "../../utils/jwt.utils";
 
 export class AuthService implements IAuthService {
@@ -69,5 +69,34 @@ export class AuthService implements IAuthService {
     await redis_client.del(`otp:${email}`);
     const token = generateToken(createdUser._id.toString(), createdUser.role);
     return token;
+  }
+
+  async resendOtp(resendOtpDto: ResendOtpDto): Promise<void> {
+    const { email } = resendOtpDto;
+    const user = await this._userRepository.findByEmail(email);
+
+    if (user) {
+      throw new Error("Email already registered.");
+    }
+
+    const redisData = await redis_client.get(`otp:${email}`);
+
+    if (!redisData) {
+      throw new Error("Registration session expired. Please register again.");
+    }
+
+    const userData = JSON.parse(redisData);
+    const otp = generateOTP();
+
+    await redis_client.setEx(
+      `otp:${email}`,
+      300,
+      JSON.stringify({
+        ...userData,
+        otp,
+      }),
+    );
+
+    await this._mailService.sendOtp(email, otp);
   }
 }
