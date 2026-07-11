@@ -7,4 +7,8 @@ export interface IProductService {
     productId: string,
     updateProductDto: UpdateProductDto,
   ): Promise<IProduct | null>;
+  getProducts(
+    page: number,
+    limit: number,
+  ): Promise<{ products: IProduct[] | null; total: number }>;
 }

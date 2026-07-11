@@ -49,4 +49,15 @@ export class ProductService implements IProductService {
     }
     return updatedProduct;
   }
+
+  async getProducts(
+    page: number,
+    limit: number,
+  ): Promise<{ products: IProduct[] | null; total: number }> {
+    const { products, total } = await this._productRepository.findAll(
+      page,
+      limit,
+    );
+    return { products, total };
+  }
 }

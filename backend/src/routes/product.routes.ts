@@ -6,6 +6,7 @@ productRouter.post(
   "/",
   productController.createProduct.bind(productController),
 );
+productRouter.get("/", productController.getProducts.bind(productController));
 productRouter.put(
   "/:id",
   productController.updateProduct.bind(productController),

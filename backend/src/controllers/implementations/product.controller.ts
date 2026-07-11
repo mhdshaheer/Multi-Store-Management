@@ -41,4 +41,26 @@ export class ProductController implements IProductController {
       next(error);
     }
   }
+  async getProducts(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const { products, total } = await this._productService.getProducts(
+        page,
+        limit,
+      );
+      res.status(200).json({
+        success: true,
+        message: "Data fetched successfully",
+        products,
+        total,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

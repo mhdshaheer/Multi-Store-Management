@@ -19,4 +19,18 @@ export class ProductRepository
   async findBySKU(sku: string): Promise<IProduct | null> {
     return await this.model.findOne({ sku });
   }
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<{ products: IProduct[] | null; total: number }> {
+    const skip = (page - 1) * limit;
+    const [products, total] = await Promise.all([
+      this.model.find().skip(skip).limit(limit).sort({ createdAt: -1 }),
+      this.model.countDocuments(),
+    ]);
+    return {
+      products,
+      total,
+    };
+  }
 }
