@@ -8,4 +8,7 @@ export const env = {
   get MONGO_URI() {
     return process.env.MONGO_URI;
   },
+  get REDIS_URL() {
+    return process.env.REDIS_URL;
+  },
 };
