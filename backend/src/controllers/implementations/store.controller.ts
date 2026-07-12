@@ -21,4 +21,21 @@ export class StoreController implements IStoreController {
       next(error);
     }
   }
+  async getStoreById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const storeId = req.params.storeId;
+      const store = await this._storeService.getStoreById(storeId.toString());
+      res.status(200).json({
+        success: true,
+        message: "Store data is fetched successfully",
+        store,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

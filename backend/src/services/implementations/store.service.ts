@@ -16,4 +16,8 @@ export class StoreService implements IStoreService {
     const store = await this._storeRepository.create(storeData);
     return store;
   }
+  async getStoreById(storeId: string): Promise<IStore | null> {
+    const store = await this._storeRepository.findById(storeId);
+    return store;
+  }
 }
