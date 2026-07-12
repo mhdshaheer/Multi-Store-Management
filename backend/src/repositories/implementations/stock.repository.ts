@@ -1,0 +1,12 @@
+import { IStock, StockModel } from "../../models/stock.model";
+import { BaseRepository } from "../base.repository";
+import { IStockRepository } from "../interfaces/stock.repository.interface";
+
+export class StockRepository
+  extends BaseRepository<IStock>
+  implements IStockRepository
+{
+  constructor() {
+    super(StockModel);
+  }
+}
