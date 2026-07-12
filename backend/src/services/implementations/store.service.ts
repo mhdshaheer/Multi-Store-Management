@@ -20,4 +20,17 @@ export class StoreService implements IStoreService {
     const store = await this._storeRepository.findById(storeId);
     return store;
   }
+  async getStores(
+    page: number,
+    limit: number,
+  ): Promise<{ stores: IStore[] | null; total: number }> {
+    const { stores, total } = await this._storeRepository.getStores(
+      page,
+      limit,
+    );
+    return {
+      stores,
+      total,
+    };
+  }
 }

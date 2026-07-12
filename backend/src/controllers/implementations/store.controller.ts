@@ -38,4 +38,23 @@ export class StoreController implements IStoreController {
       next(error);
     }
   }
+  async getStores(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 10;
+      const { stores, total } = await this._storeService.getStores(page, limit);
+      res.status(200).json({
+        success: true,
+        message: "Store data is fetched successfully",
+        stores,
+        total,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
