@@ -46,4 +46,24 @@ export class StockController implements IStockController {
       next(error);
     }
   }
+  async transferStock(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { productId, fromStoreId, toStoreId, quantity } = req.body;
+
+      const result = await this._stockService.transferStock(
+        productId,
+        fromStoreId,
+        toStoreId,
+        quantity,
+      );
+
+      res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { CreateStockDto, UpdateStockDto } from "../../dtos/stock.dto";
 import { IStock } from "../../models/stock.model";
 import { IStockRepository } from "../../repositories/interfaces/stock.repository.interface";
@@ -40,5 +41,52 @@ export class StockService implements IStockService {
     }
     const updateStock = await this._stockRepository.update(stockId, updateData);
     return updateStock;
+  }
+  async transferStock(
+    productId: string,
+    fromStoreId: string,
+    toStoreId: string,
+    quantity: number,
+  ) {
+    if (quantity <= 0) {
+      throw new Error("Quantity must be greater than zero");
+    }
+
+    if (fromStoreId === toStoreId) {
+      throw new Error("Cannot transfer to same store");
+    }
+
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+
+      const source = await this._stockRepository.decreaseStock(
+        productId,
+        fromStoreId,
+        quantity,
+        session,
+      );
+
+      if (!source) {
+        throw new Error("Insufficient stock");
+      }
+
+      await this._stockRepository.increaseStock(
+        productId,
+        toStoreId,
+        quantity,
+        session,
+      );
+      await session.commitTransaction();
+      return {
+        success: true,
+        message: "Transfer completed",
+      };
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    } finally {
+      session.endSession();
+    }
   }
 }

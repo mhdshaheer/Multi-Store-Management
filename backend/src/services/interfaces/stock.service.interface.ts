@@ -7,4 +7,10 @@ export interface IStockService {
     stockId: string,
     updateData: UpdateStockDto,
   ): Promise<IStock | null>;
+  transferStock(
+    productId: string,
+    fromStockId: string,
+    toStockId: string,
+    quantity: number,
+  ): Promise<{ success: boolean; message: string }>;
 }
