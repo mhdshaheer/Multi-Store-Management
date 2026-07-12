@@ -3,3 +3,6 @@ export interface CreateStockDto {
   storeId: string;
   quantity: number;
 }
+export interface UpdateStockDto {
+  quantity: number;
+}

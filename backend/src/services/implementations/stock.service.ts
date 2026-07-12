@@ -1,4 +1,4 @@
-import { CreateStockDto } from "../../dtos/stock.dto";
+import { CreateStockDto, UpdateStockDto } from "../../dtos/stock.dto";
 import { IStock } from "../../models/stock.model";
 import { IStockRepository } from "../../repositories/interfaces/stock.repository.interface";
 import { IStockService } from "../interfaces/stock.service.interface";
@@ -23,5 +23,22 @@ export class StockService implements IStockService {
     }
     const stock = await this._stockRepository.create(stockData);
     return stock;
+  }
+
+  async updateStock(
+    stockId: string,
+    updateData: UpdateStockDto,
+  ): Promise<IStock | null> {
+    const isStockExist = await this._stockRepository.isExist(stockId);
+    if (!isStockExist) {
+      throw new Error("StockId is not exist");
+    }
+    if (updateData.quantity) {
+      if (updateData.quantity < 0) {
+        throw new Error("Stock quantinty is not be negative");
+      }
+    }
+    const updateStock = await this._stockRepository.update(stockId, updateData);
+    return updateStock;
   }
 }

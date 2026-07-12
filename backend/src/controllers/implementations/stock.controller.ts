@@ -25,4 +25,25 @@ export class StockController implements IStockController {
       next(error);
     }
   }
+  async updateStock(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { stockId } = req.params;
+      const { quantity } = req.body;
+      const updateStock = await this._stockService.updateStock(
+        stockId.toString(),
+        { quantity },
+      );
+      res.status(200).json({
+        success: true,
+        message: "Stock updated Successfully",
+        updateStock,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

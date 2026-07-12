@@ -12,4 +12,8 @@ export class StockRepository
   async findByCondition(data: Partial<IStock>): Promise<IStock | null> {
     return await this.model.findOne(data);
   }
+  async isExist(stockId: string): Promise<boolean> {
+    const isStockIdExist = await this.model.exists({ _id: stockId });
+    return !!isStockIdExist;
+  }
 }
