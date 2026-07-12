@@ -1,0 +1,166 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-container {
+  min-height: 100vh;
+  background: #f8f8f8;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+
+  padding: 40px 32px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo-circle {
+  width: 60px;
+  height: 60px;
+
+  margin: 0 auto 16px;
+
+  border-radius: 50%;
+
+  background: #000;
+  color: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo h1 {
+  font-size: 28px;
+  color: #111;
+  margin-bottom: 8px;
+}
+
+.logo p {
+  color: #666;
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+
+  font-size: 15px;
+  background: #fff;
+  color: #111;
+
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.form-group input:focus {
+  border-color: #000;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 12px 0 28px;
+
+  font-size: 14px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #444;
+}
+
+.options a {
+  color: #000;
+  text-decoration: none;
+}
+
+.options a:hover {
+  text-decoration: underline;
+}
+
+button {
+  width: 100%;
+  padding: 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #000;
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #222;
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+}
