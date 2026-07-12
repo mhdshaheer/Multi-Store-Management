@@ -13,6 +13,14 @@ export class StockService implements IStockService {
     if (!storeId?.length) {
       throw new Error("Store Id is missing");
     }
+    // check the same stock exist
+    const existStock = await this._stockRepository.findByCondition({
+      productId,
+      storeId,
+    });
+    if (existStock) {
+      throw new Error("This item stock is already exist on the same store");
+    }
     const stock = await this._stockRepository.create(stockData);
     return stock;
   }

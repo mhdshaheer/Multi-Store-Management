@@ -9,4 +9,7 @@ export class StockRepository
   constructor() {
     super(StockModel);
   }
+  async findByCondition(data: Partial<IStock>): Promise<IStock | null> {
+    return await this.model.findOne(data);
+  }
 }
