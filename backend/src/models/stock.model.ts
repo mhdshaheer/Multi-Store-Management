@@ -1,8 +1,8 @@
 import mongoose, { Document, Model, Types } from "mongoose";
 
 export interface IStock extends Document {
-  productId: Types.ObjectId;
-  storeId: Types.ObjectId;
+  productId: Types.ObjectId | string;
+  storeId: Types.ObjectId | string;
   quantity: number;
 }
 
