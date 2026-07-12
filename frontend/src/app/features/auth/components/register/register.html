@@ -1,0 +1,59 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="logo">
+      <h1>MyStore</h1>
+      <p>Create your account</p>
+    </div>
+
+    <form>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input id="name" type="text" placeholder="Enter your full name" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="Enter your email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <div class="password-field">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Enter your password"
+          />
+
+          <button type="button" class="toggle-btn" (click)="togglePassword()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+
+        <div class="password-field">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            placeholder="Confirm your password"
+          />
+
+          <button type="button" class="toggle-btn" (click)="toggleConfirmPassword()">
+            {{ showConfirmPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </div>
+
+      <button class="register-btn" type="submit">Create Account</button>
+
+      <p class="footer-text">
+        Already have an account?
+        <a routerLink="/auth/login">Sign In</a>
+      </p>
+    </form>
+  </div>
+</div>

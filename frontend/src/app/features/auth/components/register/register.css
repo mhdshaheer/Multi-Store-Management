@@ -1,0 +1,165 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+}
+
+.register-container {
+  min-height: 100vh;
+  background: #f8f8f8;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 450px;
+
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+
+  padding: 40px 32px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-circle {
+  width: 60px;
+  height: 60px;
+
+  margin: 0 auto 16px;
+
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo h1 {
+  color: #111;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.logo p {
+  color: #666;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
+
+  font-size: 15px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #000;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 70px;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.register-btn {
+  width: 100%;
+  margin-top: 10px;
+
+  padding: 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #000;
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.register-btn:hover {
+  background: #222;
+}
+
+.footer-text {
+  margin-top: 24px;
+  text-align: center;
+  color: #666;
+}
+
+.footer-text a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 32px 24px;
+  }
+}
