@@ -81,13 +81,14 @@ export class Otp {
   }
 
   resendOTP() {
-    this.otp = ['', '', '', '', '', ''];
-
-    document.querySelectorAll('input').forEach((input: any) => (input.value = ''));
-
-    (document.getElementById('otp-0') as HTMLInputElement)?.focus();
-
-    this.showNotification('OTP has been resent.', 'success');
+    this._authService.resendOtp(this.userEmail).subscribe({
+      next: (res) => {
+        console.log(res.message);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   showNotification(message: string, type: 'success' | 'error') {
