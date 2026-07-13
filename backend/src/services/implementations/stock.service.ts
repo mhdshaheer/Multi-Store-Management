@@ -7,12 +7,16 @@ import { IStockService } from "../interfaces/stock.service.interface";
 export class StockService implements IStockService {
   constructor(private _stockRepository: IStockRepository) {}
   async addStock(stockData: CreateStockDto): Promise<IStock> {
-    const { productId, storeId, quantity } = stockData;
+    const { productId, storeId, quantity, threshold } = stockData;
+
     if (!productId?.length) {
       throw new Error("Product id is missing");
     }
     if (!storeId?.length) {
       throw new Error("Store Id is missing");
+    }
+    if (threshold < 0) {
+      throw new Error("Store threshold not be zero");
     }
     // check the same stock exist
     const existStock = await this._stockRepository.findByCondition({
@@ -38,6 +42,9 @@ export class StockService implements IStockService {
       if (updateData.quantity < 0) {
         throw new Error("Stock quantinty is not be negative");
       }
+    }
+    if(updateData.threshold<0){
+      throw new Error("Stock Threshold not be Zero")
     }
     const updateStock = await this._stockRepository.update(stockId, updateData);
     return updateStock;

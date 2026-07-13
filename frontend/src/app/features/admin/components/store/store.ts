@@ -19,6 +19,21 @@ export class Store {
   // ===================================================
   private _storeService = inject(StoreService);
   private _cdr = inject(ChangeDetectorRef);
+  showModal = false;
+  isEdit = false;
+  currentStoreId = '';
+  storeForm: FormGroup;
+  stores: IStore[] = [];
+
+  constructor(private fb: FormBuilder) {
+    this.storeForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      address: ['', [Validators.required, Validators.minLength(5)]],
+    });
+  }
+  ngOnInit() {
+    this.getStores();
+  }
   getStores() {
     this._storeService.getStores().subscribe({
       next: (res) => {
@@ -31,9 +46,6 @@ export class Store {
       },
     });
   }
-  ngOnInit() {
-    this.getStores();
-  }
   createStore(store: IStore) {
     this._storeService.createStore(store).subscribe({
       next: (res) => {
@@ -45,34 +57,17 @@ export class Store {
       },
     });
   }
-  // ===================================================
-  showModal = false;
-  isEdit = false;
-  currentStoreId = '';
-  storeForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
-    this.storeForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
-    });
-  }
-
-  stores: IStore[] = [];
 
   openCreate() {
     this.isEdit = false;
     this.currentStoreId = '';
-
     this.storeForm.reset();
-
     this.showModal = true;
   }
 
   openEdit(store: IStore) {
     this.isEdit = true;
     this.currentStoreId = store._id!;
-
     this.storeForm.patchValue({
       name: store.name,
       address: store.address,

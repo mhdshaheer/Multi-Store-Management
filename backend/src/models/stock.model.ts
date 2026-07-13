@@ -4,6 +4,7 @@ export interface IStock extends Document {
   productId: Types.ObjectId | string;
   storeId: Types.ObjectId | string;
   quantity: number;
+  threshold: number;
 }
 
 const stockModal = new mongoose.Schema<IStock>(
@@ -19,6 +20,12 @@ const stockModal = new mongoose.Schema<IStock>(
       required: true,
     },
     quantity: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    },
+    threshold: {
       type: Number,
       required: true,
       default: 0,

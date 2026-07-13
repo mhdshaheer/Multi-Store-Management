@@ -10,16 +10,17 @@ export class StockController implements IStockController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { productId, storeId, quantity } = req.body;
+      const { productId, storeId, quantity, threshold } = req.body;
       const stock = await this._stockService.addStock({
         productId,
         storeId,
         quantity,
+        threshold,
       });
       res.status(200).json({
         success: true,
         message: "Stock is created successfully",
-        stock,
+        data: stock,
       });
     } catch (error) {
       next(error);
@@ -32,15 +33,15 @@ export class StockController implements IStockController {
   ): Promise<void> {
     try {
       const { stockId } = req.params;
-      const { quantity } = req.body;
+      const { quantity, threshold } = req.body;
       const updateStock = await this._stockService.updateStock(
         stockId.toString(),
-        { quantity },
+        { quantity, threshold },
       );
       res.status(200).json({
         success: true,
         message: "Stock updated Successfully",
-        updateStock,
+        data: updateStock,
       });
     } catch (error) {
       next(error);
@@ -61,7 +62,11 @@ export class StockController implements IStockController {
         quantity,
       );
 
-      res.status(200).json(result);
+      res.status(200).json({
+        success: true,
+        message: "Stock Transfer success",
+        data: result,
+      });
     } catch (err) {
       next(err);
     }
