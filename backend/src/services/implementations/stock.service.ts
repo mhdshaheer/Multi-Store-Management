@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
-import { CreateStockDto, UpdateStockDto } from "../../dtos/stock.dto";
+import {
+  CreateStockDto,
+  IGetStock,
+  UpdateStockDto,
+} from "../../dtos/stock.dto";
 import { IStock } from "../../models/stock.model";
 import { IStockRepository } from "../../repositories/interfaces/stock.repository.interface";
 import { IStockService } from "../interfaces/stock.service.interface";
@@ -43,8 +47,8 @@ export class StockService implements IStockService {
         throw new Error("Stock quantinty is not be negative");
       }
     }
-    if(updateData.threshold<0){
-      throw new Error("Stock Threshold not be Zero")
+    if (updateData.threshold < 0) {
+      throw new Error("Stock Threshold not be Zero");
     }
     const updateStock = await this._stockRepository.update(stockId, updateData);
     return updateStock;
@@ -95,5 +99,9 @@ export class StockService implements IStockService {
     } finally {
       session.endSession();
     }
+  }
+  async getStocks(): Promise<IGetStock[] | null> {
+    const stocks = await this._stockRepository.getStocks();
+    return stocks;
   }
 }

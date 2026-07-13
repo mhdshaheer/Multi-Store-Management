@@ -45,6 +45,7 @@ export class Stock {
     });
     this.getProducts();
     this.getStores();
+    this.getStocks();
   }
   addStock(stock: IStock) {
     this._stockService.addCreate(stock).subscribe({
@@ -83,6 +84,28 @@ export class Stock {
       },
     });
   }
+  getStocks() {
+    this._stockService.getStocks().subscribe({
+      next: (res) => {
+        console.log(res);
+        res.data?.forEach((item) => {
+          this.stocks.push({
+            _id: String(item._id),
+            productId: String(item.product._id),
+            storeId: item.store._id!,
+            quantity: item.quantity,
+            threshold: item.threshold,
+            productName: item.product.name!,
+            storeName: item.store.name,
+          });
+        });
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   get f() {
     return this.stockForm.controls;
   }
@@ -106,8 +129,8 @@ export class Stock {
 
   currentStock: IStock = {
     _id: '',
-    productId: 0,
-    storeId: 0,
+    productId: '',
+    storeId: '',
     productName: '',
     storeName: '',
     quantity: 0,
@@ -116,9 +139,8 @@ export class Stock {
 
   filteredStocks(): IStock[] {
     return this.stocks.filter((stock) => {
-      const productMatch =
-        !this.selectedProduct || stock.productId === Number(this.selectedProduct);
-      const storeMatch = !this.selectedStore || stock.storeId === Number(this.selectedStore);
+      const productMatch = !this.selectedProduct || stock.productId === this.selectedProduct;
+      const storeMatch = !this.selectedStore || stock.storeId === this.selectedStore;
 
       return productMatch && storeMatch;
     });

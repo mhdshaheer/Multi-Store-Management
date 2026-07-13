@@ -2,6 +2,7 @@ import { ClientSession } from "mongoose";
 import { IStock, StockModel } from "../../models/stock.model";
 import { BaseRepository } from "../base.repository";
 import { IStockRepository } from "../interfaces/stock.repository.interface";
+import { IGetStock } from "../../dtos/stock.dto";
 
 export class StockRepository
   extends BaseRepository<IStock>
@@ -64,5 +65,22 @@ export class StockRepository
         upsert: true,
       },
     );
+  }
+  async getStocks(): Promise<IGetStock[] | null> {
+    const stocks = await this.model
+      .find()
+      .populate("productId")
+      .populate("storeId")
+      .lean()
+      .exec();
+
+    const populatedStocks: IGetStock[] = stocks.map((stock: any) => ({
+      _id: stock._id,
+      product: stock.productId,
+      store: stock.storeId,
+      quantity: stock.quantity,
+      threshold: stock.threshold,
+    }));
+    return populatedStocks;
   }
 }

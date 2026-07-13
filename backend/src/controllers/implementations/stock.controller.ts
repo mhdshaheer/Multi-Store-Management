@@ -71,4 +71,16 @@ export class StockController implements IStockController {
       next(err);
     }
   }
+  async getStocks(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const stocks = await this._stockService.getStocks();
+      res.status(200).json({
+        success:true,
+        message:"Stocks are success fully fetched",
+        data:stocks
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }

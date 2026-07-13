@@ -1,4 +1,8 @@
-import { CreateStockDto, UpdateStockDto } from "../../dtos/stock.dto";
+import {
+  CreateStockDto,
+  IGetStock,
+  UpdateStockDto,
+} from "../../dtos/stock.dto";
 import { IStock } from "../../models/stock.model";
 
 export interface IStockService {
@@ -13,4 +17,5 @@ export interface IStockService {
     toStockId: string,
     quantity: number,
   ): Promise<{ success: boolean; message: string }>;
+  getStocks(): Promise<IGetStock[] | null>;
 }
