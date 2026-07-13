@@ -5,24 +5,44 @@
       <p>Create your account</p>
     </div>
 
-    <form>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <!-- Name -->
+
       <div class="form-group">
-        <label for="name">Full Name</label>
-        <input id="name" type="text" placeholder="Enter your full name" />
+        <label>Full Name</label>
+        <input type="text" formControlName="name" placeholder="Enter your full name" />
+
+        @if (f['name'].touched && f['name'].invalid) {
+          <small class="error">
+            @if (f['name'].errors?.['required']) {
+              Full name is required.
+            }
+            @if (f['name'].errors?.['minlength']) {
+              Minimum 3 characters required.
+            }
+          </small>
+        }
       </div>
-
       <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="Enter your email" />
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email" />
+        @if (f['email'].touched && f['email'].invalid) {
+          <small class="error">
+            @if (f['email'].errors?.['required']) {
+              Email is required.
+            }
+            @if (f['email'].errors?.['email']) {
+              Enter a valid email address.
+            }
+          </small>
+        }
       </div>
-
       <div class="form-group">
-        <label for="password">Password</label>
-
+        <label>Password</label>
         <div class="password-field">
           <input
-            id="password"
             [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
             placeholder="Enter your password"
           />
 
@@ -30,29 +50,42 @@
             {{ showPassword ? 'Hide' : 'Show' }}
           </button>
         </div>
+        @if (f['password'].touched && f['password'].invalid) {
+          <small class="error">
+            @if (f['password'].errors?.['required']) {
+              Password is required.
+            }
+            @if (f['password'].errors?.['minlength']) {
+              Password must be at least 6 characters.
+            }
+          </small>
+        }
       </div>
-
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-
+        <label>Confirm Password</label>
         <div class="password-field">
           <input
-            id="confirmPassword"
             [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
             placeholder="Confirm your password"
           />
-
           <button type="button" class="toggle-btn" (click)="toggleConfirmPassword()">
             {{ showConfirmPassword ? 'Hide' : 'Show' }}
           </button>
         </div>
+        @if (f['confirmPassword'].touched && f['confirmPassword'].invalid) {
+          <small class="error"> Confirm Password is required. </small>
+        }
       </div>
-
-      <button class="register-btn" type="submit">Create Account</button>
-
+      @if (registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched) {
+        <small class="error"> Passwords do not match. </small>
+      }
+      <button class="register-btn" type="submit" [disabled]="registerForm.invalid">
+        Create Account
+      </button>
       <p class="footer-text">
         Already have an account?
-        <a routerLink="/auth/login">Sign In</a>
+        <a routerLink="/auth/login"> Sign In </a>
       </p>
     </form>
   </div>
