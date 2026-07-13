@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/api.model';
 import { HttpClient } from '@angular/common/http';
-import { IGetStock, IStock } from '../models/stock.model';
+import { IGetStock, IStock, ITransferStock } from '../models/stock.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,10 @@ export class StockService {
   addCreate(stock: IStock): Observable<ApiResponse<IStock>> {
     return this._http.post<ApiResponse<IStock>>(this._api, stock);
   }
-  getStocks():Observable<ApiResponse<IGetStock[]>>{
-    return this._http.get<ApiResponse<IGetStock[]>>(this._api)
+  getStocks(): Observable<ApiResponse<IGetStock[]>> {
+    return this._http.get<ApiResponse<IGetStock[]>>(this._api);
+  }
+  transferStock(transferData: ITransferStock): Observable<ApiResponse<IStock>> {
+    return this._http.post<ApiResponse<IStock>>(`${this._api}/transfer`, transferData);
   }
 }

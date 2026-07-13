@@ -265,55 +265,75 @@
     <div class="modal">
       <h3>Transfer Stock</h3>
 
-      <div class="field">
-        <label>Product</label>
+      <form [formGroup]="transferForm" (ngSubmit)="transferStock()">
+        <div class="field">
+          <label>Product</label>
 
-        <input [value]="selectedStock.productName" disabled />
-      </div>
-
-      <div class="field">
-        <label>From Store</label>
-
-        <input [value]="selectedStock.storeName" disabled />
-      </div>
-
-      <div class="field">
-        <label>Transfer To</label>
-
-        <select [(ngModel)]="transfer.toStoreId">
-          <option value="">Select Store</option>
-
-          @for (store of stores; track store._id) {
-            @if (store._id != selectedStock.storeId.toString()) {
-              <option [value]="store._id">
-                {{ store.name }}
-              </option>
-            }
-          }
-        </select>
-      </div>
-
-      <div class="field">
-        <label> Available Stock </label>
-
-        <input [value]="selectedStock.quantity" disabled />
-      </div>
-
-      <div class="field">
-        <label> Transfer Quantity </label>
-        <input type="number" [(ngModel)]="transfer.quantity" />
-      </div>
-
-      @if (validationMessage) {
-        <div class="validation">
-          {{ validationMessage }}
+          <input [value]="selectedStock.productName" disabled />
         </div>
-      }
 
-      <div class="actions">
-        <button class="cancel" (click)="closeTransfer()">Cancel</button>
-        <button class="save" (click)="transferStock()">Transfer</button>
-      </div>
+        <div class="field">
+          <label>From Store</label>
+
+          <input [value]="selectedStock.storeName" disabled />
+        </div>
+
+        <div class="field">
+          <label>Transfer To</label>
+
+          <select formControlName="toStoreId">
+            <option value="">Select Store</option>
+
+            @for (store of stores; track store._id) {
+              @if (store._id != selectedStock.storeId.toString()) {
+                <option [value]="store._id">
+                  {{ store.name }}
+                </option>
+              }
+            }
+          </select>
+
+          @if (tf['toStoreId'].touched && tf['toStoreId'].invalid) {
+            <small class="error"> Destination store is required. </small>
+          }
+        </div>
+
+        <div class="field">
+          <label>Available Stock</label>
+
+          <input [value]="selectedStock.quantity" disabled />
+        </div>
+
+        <div class="field">
+          <label>Transfer Quantity</label>
+
+          <input type="number" formControlName="quantity" />
+
+          @if (tf['quantity'].touched && tf['quantity'].invalid) {
+            <small class="error">
+              @if (tf['quantity'].errors?.['required']) {
+                Quantity is required.
+              }
+
+              @if (tf['quantity'].errors?.['min']) {
+                Quantity must be greater than zero.
+              }
+            </small>
+          }
+        </div>
+
+        @if (validationMessage) {
+          <div class="validation">
+            {{ validationMessage }}
+          </div>
+        }
+
+        <div class="actions">
+          <button type="button" class="cancel" (click)="closeTransfer()">Cancel</button>
+
+          <button type="submit" class="save" [disabled]="transferForm.invalid">Transfer</button>
+        </div>
+      </form>
     </div>
   </div>
 }

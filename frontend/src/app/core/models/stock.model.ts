@@ -17,3 +17,9 @@ export interface IGetStock {
   quantity: number;
   threshold: number;
 }
+export interface ITransferStock {
+  productId: string;
+  fromStoreId: string;
+  toStoreId: string;
+  quantity: number;
+}

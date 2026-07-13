@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IStock } from '../../../../core/models/stock.model';
+import { IStock, ITransferStock } from '../../../../core/models/stock.model';
 import { StockService } from '../../../../core/services/stock.service';
 import { StoreService } from '../../../../core/services/store.service';
 import { ProductService } from '../../../../core/services/product.service';
@@ -35,6 +35,7 @@ export class Stock {
   private _cdr = inject(ChangeDetectorRef);
   products: ProductList[] = [];
   stockForm!: FormGroup;
+  transferForm!: FormGroup;
   private fb = inject(FormBuilder);
   ngOnInit() {
     this.stockForm = this.fb.group({
@@ -42,6 +43,10 @@ export class Stock {
       storeId: ['', Validators.required],
       quantity: [0, [Validators.required, Validators.min(1)]],
       threshold: [0, [Validators.required, Validators.min(0)]],
+    });
+    this.transferForm = this.fb.group({
+      toStoreId: ['', Validators.required],
+      quantity: ['', [Validators.required, Validators.min(1)]],
     });
     this.getProducts();
     this.getStores();
@@ -87,7 +92,6 @@ export class Stock {
   getStocks() {
     this._stockService.getStocks().subscribe({
       next: (res) => {
-        console.log(res);
         res.data?.forEach((item) => {
           this.stocks.push({
             _id: String(item._id),
@@ -106,8 +110,58 @@ export class Stock {
       },
     });
   }
+  openTransfer(stock: IStock) {
+    this.selectedStock = stock;
+    this.transferForm.reset({
+      toStoreId: '',
+      quantity: '',
+    });
+    this.validationMessage = '';
+    this.showTransferModal = true;
+  }
+  transferStock() {
+    this.validationMessage = '';
+
+    if (this.transferForm.invalid) {
+      this.transferForm.markAllAsTouched();
+      return;
+    }
+
+    const value = this.transferForm.value;
+
+    if (value.quantity > this.selectedStock.quantity) {
+      this.validationMessage = 'Transfer quantity cannot exceed available stock.';
+      return;
+    }
+
+    const productId = this.selectedStock.productId;
+    const fromStoreId = this.selectedStock.storeId;
+    const toStoreId = value.toStoreId;
+    const quantity = value.quantity;
+    this.stockTransfer({ productId, fromStoreId, toStoreId, quantity });
+
+    this.closeTransfer();
+  }
+  closeTransfer() {
+    this.showTransferModal = false;
+    this.transferForm.reset();
+  }
+
+  stockTransfer(transferData: ITransferStock) {
+    this._stockService.transferStock(transferData).subscribe({
+      next: (res) => {
+        console.log('stock is updated successfully.');
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   get f() {
     return this.stockForm.controls;
+  }
+  get tf() {
+    return this.transferForm.controls;
   }
   // ================================
   showModal = false;
@@ -199,53 +253,5 @@ export class Stock {
   closeModal() {
     this.stockForm.reset();
     this.showModal = false;
-  }
-
-  openTransfer(stock: IStock) {
-    this.selectedStock = stock;
-    this.transfer = {
-      toStoreId: '',
-      quantity: 0,
-    };
-
-    this.validationMessage = '';
-    this.showTransferModal = true;
-  }
-
-  closeTransfer() {
-    this.showTransferModal = false;
-  }
-
-  transferStock() {
-    this.validationMessage = '';
-
-    if (!this.transfer.toStoreId) {
-      this.validationMessage = 'Please select a destination store.';
-
-      return;
-    }
-
-    if (this.transfer.quantity <= 0) {
-      this.validationMessage = 'Transfer quantity must be greater than zero.';
-
-      return;
-    }
-
-    if (this.transfer.quantity > this.selectedStock.quantity) {
-      this.validationMessage = 'Transfer quantity cannot exceed available stock.';
-
-      return;
-    }
-
-    // API Call
-
-    console.log({
-      productId: this.selectedStock.productId,
-      fromStoreId: this.selectedStock.storeId,
-      toStoreId: this.transfer.toStoreId,
-      quantity: this.transfer.quantity,
-    });
-
-    this.closeTransfer();
   }
 }

@@ -25,22 +25,13 @@ export class StockRepository
     quantity: number,
     session: ClientSession,
   ): Promise<IStock | null> {
-    return this.model.findOneAndUpdate(
-      {
-        productId,
-        storeId,
-        quantity: { $gte: quantity },
-      },
-      {
-        $inc: {
-          quantity: -quantity,
-        },
-      },
-      {
-        session,
-        new: true,
-      },
-    );
+    const stock = await this.model.findOne({ productId, storeId });
+    if (!stock || stock.quantity < quantity) {
+      throw new Error("Insufficient stock or stock record not found.");
+    }
+    stock.quantity -= quantity;
+    await stock.save();
+    return stock;
   }
 
   async increaseStock(
@@ -49,22 +40,21 @@ export class StockRepository
     quantity: number,
     session: ClientSession,
   ): Promise<IStock | null> {
-    return this.model.findOneAndUpdate(
-      {
+    let stock = await this.model.findOne({ productId, storeId });
+
+    if (stock) {
+      stock.quantity += quantity;
+      await stock.save();
+      return stock;
+    } else {
+      const newStock = new this.model({
         productId,
         storeId,
-      },
-      {
-        $inc: {
-          quantity,
-        },
-      },
-      {
-        session,
-        new: true,
-        upsert: true,
-      },
-    );
+        quantity: quantity >= 0 ? quantity : 0,
+      });
+      await newStock.save();
+      return newStock;
+    }
   }
   async getStocks(): Promise<IGetStock[] | null> {
     const stocks = await this.model
@@ -81,6 +71,7 @@ export class StockRepository
       quantity: stock.quantity,
       threshold: stock.threshold,
     }));
+
     return populatedStocks;
   }
 }
