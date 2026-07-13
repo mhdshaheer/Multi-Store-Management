@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IProduct } from '../../../../core/models/product.model';
+import { ProductService } from '../../../../core/services/product.service';
 
-interface IProduct {
-  id: number;
-  name: string;
-  sku: string;
-}
+// interface IProduct {
+//   id: number;
+//   name: string;
+//   sku: string;
+// }
 @Component({
   selector: 'app-product',
   imports: [FormsModule],
@@ -13,6 +15,26 @@ interface IProduct {
   styleUrl: './product.css',
 })
 export class Product {
+  // ================== API =======================
+  private _productService = inject(ProductService);
+  private _cdr = inject(ChangeDetectorRef);
+  products: IProduct[] = [];
+  ngOnInit() {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this._productService.getProducts().subscribe({
+      next: (res) => {
+        this.products = res.data;
+        this._cdr.markForCheck();
+      },
+      error: () => {
+        console.log('error while product fetching');
+      },
+    });
+  }
+  // ==============================================
   showModal = false;
   isEdit = false;
 
@@ -22,13 +44,13 @@ export class Product {
     sku: '',
   };
 
-  products: IProduct[] = [
-    { id: 1, name: 'Laptop', sku: 'LP1001' },
-    { id: 2, name: 'Keyboard', sku: 'KB1002' },
-    { id: 3, name: 'Mouse', sku: 'MS1003' },
-    { id: 4, name: 'Monitor', sku: 'MN1004' },
-    { id: 5, name: 'Printer', sku: 'PR1005' },
-  ];
+  // products: IProduct[] = [
+  //   { id: 1, name: 'Laptop', sku: 'LP1001' },
+  //   { id: 2, name: 'Keyboard', sku: 'KB1002' },
+  //   { id: 3, name: 'Mouse', sku: 'MS1003' },
+  //   { id: 4, name: 'Monitor', sku: 'MN1004' },
+  //   { id: 5, name: 'Printer', sku: 'PR1005' },
+  // ];
 
   openCreate() {
     this.isEdit = false;

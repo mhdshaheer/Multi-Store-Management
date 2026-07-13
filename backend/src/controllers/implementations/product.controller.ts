@@ -56,7 +56,7 @@ export class ProductController implements IProductController {
       res.status(200).json({
         success: true,
         message: "Data fetched successfully",
-        products,
+        data: products,
         total,
       });
     } catch (error) {
