@@ -301,3 +301,38 @@ tbody tr:hover {
   color: red;
   font-size: 14px;
 }
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #2563eb;
+}
+
+.error {
+  display: block;
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}

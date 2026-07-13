@@ -1,5 +1,11 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { IStock } from '../../../../core/models/stock.model';
 import { StockService } from '../../../../core/services/stock.service';
 import { StoreService } from '../../../../core/services/store.service';
@@ -17,7 +23,7 @@ interface StoreList {
 
 @Component({
   selector: 'app-stock',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './stock.html',
   styleUrl: './stock.css',
 })
@@ -28,11 +34,28 @@ export class Stock {
   private _productService = inject(ProductService);
   private _cdr = inject(ChangeDetectorRef);
   products: ProductList[] = [];
+  stockForm!: FormGroup;
+  private fb = inject(FormBuilder);
   ngOnInit() {
+    this.stockForm = this.fb.group({
+      productId: ['', Validators.required],
+      storeId: ['', Validators.required],
+      quantity: [0, [Validators.required, Validators.min(1)]],
+      threshold: [0, [Validators.required, Validators.min(0)]],
+    });
     this.getProducts();
     this.getStores();
   }
-  addStock() {}
+  addStock(stock: IStock) {
+    this._stockService.addCreate(stock).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   getProducts() {
     this._productService.getProducts().subscribe({
       next: (res) => {
@@ -59,6 +82,9 @@ export class Stock {
         this._cdr.markForCheck();
       },
     });
+  }
+  get f() {
+    return this.stockForm.controls;
   }
   // ================================
   showModal = false;
@@ -100,47 +126,56 @@ export class Stock {
 
   openCreate() {
     this.isEdit = false;
-    this.currentStock = {
-      _id: '',
-      productId: 0,
-      storeId: 0,
-      productName: '',
-      storeName: '',
+    this.stockForm.reset({
+      productId: '',
+      storeId: '',
       quantity: 0,
       threshold: 0,
-    };
-
+    });
     this.showModal = true;
   }
 
   openEdit(stock: IStock) {
     this.isEdit = true;
-    this.currentStock = {
-      ...stock,
-    };
+    this.selectedStock = stock;
+    this.stockForm.patchValue({
+      productId: stock.productId,
+      storeId: stock.storeId,
+      quantity: stock.quantity,
+      threshold: stock.threshold,
+    });
     this.showModal = true;
   }
 
   saveStock() {
-    const product = this.products.find((p) => String(p._id) == String(this.currentStock.productId));
-    const store = this.stores.find((s) => String(s._id) == String(this.currentStock.storeId));
-    this.currentStock.productName = product?.name || '';
-    this.currentStock.storeName = store?.name || '';
-
-    if (this.isEdit) {
-      const index = this.stocks.findIndex((s) => s._id === this.currentStock._id);
-
-      this.stocks[index] = {
-        ...this.currentStock,
-      };
-    } else {
-      // create stock ui
+    if (this.stockForm.invalid) {
+      this.stockForm.markAllAsTouched();
+      return;
     }
 
+    const value = this.stockForm.value;
+    const product = this.products.find((p) => String(p._id) === String(value.productId));
+    const store = this.stores.find((s) => String(s._id) === String(value.storeId));
+    const stock: IStock = {
+      _id: this.isEdit ? this.selectedStock._id : '',
+      productId: value.productId,
+      storeId: value.storeId,
+      quantity: value.quantity,
+      threshold: value.threshold,
+      productName: product?.name ?? '',
+      storeName: store?.name ?? '',
+    };
+    if (this.isEdit) {
+      const index = this.stocks.findIndex((s) => s._id === stock._id);
+      this.stocks[index] = stock;
+    } else {
+      this.addStock(stock);
+    }
     this.closeModal();
   }
 
   closeModal() {
+    this.stockForm.reset();
     this.showModal = false;
   }
 
