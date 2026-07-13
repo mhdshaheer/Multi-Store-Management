@@ -25,7 +25,7 @@
     </thead>
 
     <tbody>
-      @for (store of stores; track store.id) {
+      @for (store of stores; track store._id) {
         <tr>
           <td>{{ store.name }}</td>
 
@@ -53,30 +53,75 @@
 </div>
 
 @if (showModal) {
-  <div class="overlay">
-    <div class="modal">
-      <h3>
-        {{ isEdit ? 'Edit Store' : 'Create Store' }}
-      </h3>
+<div class="overlay">
+  <div class="modal">
+    <h3>
+      {{ isEdit ? 'Edit Store' : 'Create Store' }}
+    </h3>
+
+    <form [formGroup]="storeForm" (ngSubmit)="saveStore()">
 
       <div class="field">
         <label>Store Name</label>
 
-        <input [(ngModel)]="currentStore.name" placeholder="Enter store name" />
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Enter store name"
+        />
+
+        @if (f['name'].touched && f['name'].invalid) {
+          <small class="error">
+            @if (f['name'].errors?.['required']) {
+              Store name is required.
+            }
+            @if (f['name'].errors?.['minlength']) {
+              Minimum 3 characters required.
+            }
+          </small>
+        }
       </div>
 
       <div class="field">
         <label>Address</label>
 
-        <textarea rows="4" [(ngModel)]="currentStore.address" placeholder="Enter address">
-        </textarea>
+        <textarea
+          rows="4"
+          formControlName="address"
+          placeholder="Enter address"
+        ></textarea>
+
+        @if (f['address'].touched && f['address'].invalid) {
+          <small class="error">
+            @if (f['address'].errors?.['required']) {
+              Address is required.
+            }
+            @if (f['address'].errors?.['minlength']) {
+              Minimum 5 characters required.
+            }
+          </small>
+        }
       </div>
 
       <div class="actions">
-        <button class="cancel" (click)="closeModal()">Cancel</button>
+        <button
+          type="button"
+          class="cancel"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
 
-        <button class="save" (click)="saveStore()">Save</button>
+        <button
+          type="submit"
+          class="save"
+          [disabled]="storeForm.invalid"
+        >
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
       </div>
-    </div>
+
+    </form>
   </div>
+</div>
 }
