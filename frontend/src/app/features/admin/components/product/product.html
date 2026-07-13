@@ -5,7 +5,7 @@
       <p>Manage all products</p>
     </div>
 
-    <button class="create-btn" (click)="openCreate()">+ Create Product</button>
+    <button class="create-btn" (click)="openCreateModal()">+ Create Product</button>
   </div>
 
   <table>
@@ -25,7 +25,7 @@
           <td>{{ product.sku }}</td>
 
           <td>
-            <button class="edit-btn" (click)="openEdit(product)">Edit</button>
+            <button class="edit-btn" (click)="openEditModal(product)">Edit</button>
           </td>
         </tr>
       }

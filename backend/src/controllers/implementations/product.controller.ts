@@ -35,7 +35,7 @@ export class ProductController implements IProductController {
       res.status(200).json({
         success: true,
         message: "Product updation is successs",
-        updatedProduct,
+        data: updatedProduct,
       });
     } catch (error) {
       next(error);

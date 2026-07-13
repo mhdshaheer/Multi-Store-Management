@@ -15,6 +15,8 @@ export class Product {
   private _productService = inject(ProductService);
   private _cdr = inject(ChangeDetectorRef);
   products: IProduct[] = [];
+  showModal = false;
+
   ngOnInit() {
     this.loadProducts();
   }
@@ -42,6 +44,17 @@ export class Product {
       },
     });
   }
+  updateProduct(productId: string, product: IProduct) {
+    this._productService.updateProduct(productId, product).subscribe({
+      next: (res) => {
+        this.products = [...this.products, res.data!];
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log('Update product failed', err);
+      },
+    });
+  }
   // ==============================================
   isEdit = false;
   currentProductId: string | null = null;
@@ -53,17 +66,20 @@ export class Product {
   openCreateModal() {
     this.isEdit = false;
     this.currentProductId = null;
+    this.showModal = true;
+
     this.productForm.reset();
   }
 
-  openEditModal(product: any) {
+  openEditModal(product: IProduct) {
     this.isEdit = true;
-    this.currentProductId = product._id;
+    this.currentProductId = product._id!;
 
     this.productForm.patchValue({
       name: product.name,
       sku: product.sku,
     });
+    this.showModal = true;
   }
 
   saveProduct() {
@@ -76,8 +92,7 @@ export class Product {
 
     if (this.isEdit) {
       console.log('Update Product', this.currentProductId, product);
-
-      // call update API
+      this.updateProduct(this.currentProductId!, product);
     } else {
       console.log('Create Product', product);
 
@@ -89,28 +104,5 @@ export class Product {
   closeModal() {
     this.productForm.reset();
     this.showModal = false;
-  }
-  // ==============================================
-  showModal = false;
-  currentProduct: IProduct = {
-    name: '',
-    sku: '',
-  };
-
-  openCreate() {
-    this.isEdit = false;
-    this.currentProduct = {
-      name: '',
-      sku: '',
-    };
-    this.showModal = true;
-  }
-
-  openEdit(product: IProduct) {
-    this.isEdit = true;
-
-    this.currentProduct = { ...product };
-
-    this.showModal = true;
   }
 }

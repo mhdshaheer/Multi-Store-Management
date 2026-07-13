@@ -15,6 +15,9 @@ export class ProductService {
     return this._http.get<ApiResponse<IProduct[]>>(this._api);
   }
   addProduct(product: IProduct): Observable<ApiResponse<IProduct>> {
-    return this._http.post<ApiResponse<IProduct>>(this._api,product);
+    return this._http.post<ApiResponse<IProduct>>(this._api, product);
+  }
+  updateProduct(productId: string, product: IProduct): Observable<ApiResponse<IProduct>> {
+    return this._http.put<ApiResponse<IProduct>>(`${this._api}/${productId}`, product);
   }
 }
