@@ -1,21 +1,17 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IProduct } from '../../../../core/models/product.model';
 import { ProductService } from '../../../../core/services/product.service';
 
-// interface IProduct {
-//   id: number;
-//   name: string;
-//   sku: string;
-// }
 @Component({
   selector: 'app-product',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './product.html',
   styleUrl: './product.css',
 })
 export class Product {
   // ================== API =======================
+  private _fb = inject(FormBuilder);
   private _productService = inject(ProductService);
   private _cdr = inject(ChangeDetectorRef);
   products: IProduct[] = [];
@@ -26,7 +22,7 @@ export class Product {
   loadProducts() {
     this._productService.getProducts().subscribe({
       next: (res) => {
-        this.products = res.data;
+        this.products = res.data!;
         this._cdr.markForCheck();
       },
       error: () => {
@@ -34,33 +30,79 @@ export class Product {
       },
     });
   }
+  createProduct(product: IProduct) {
+    this._productService.addProduct(product).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.products = [...this.products, product];
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log('error while create product ', err);
+      },
+    });
+  }
+  // ==============================================
+  isEdit = false;
+  currentProductId: string | null = null;
+  productForm = this._fb.group({
+    name: ['', [Validators.required]],
+    sku: ['', [Validators.required]],
+  });
+
+  openCreateModal() {
+    this.isEdit = false;
+    this.currentProductId = null;
+    this.productForm.reset();
+  }
+
+  openEditModal(product: any) {
+    this.isEdit = true;
+    this.currentProductId = product._id;
+
+    this.productForm.patchValue({
+      name: product.name,
+      sku: product.sku,
+    });
+  }
+
+  saveProduct() {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const product = this.productForm.getRawValue();
+
+    if (this.isEdit) {
+      console.log('Update Product', this.currentProductId, product);
+
+      // call update API
+    } else {
+      console.log('Create Product', product);
+
+      this.createProduct(product);
+    }
+    this.showModal = false;
+  }
+
+  closeModal() {
+    this.productForm.reset();
+    this.showModal = false;
+  }
   // ==============================================
   showModal = false;
-  isEdit = false;
-
   currentProduct: IProduct = {
-    id: 0,
     name: '',
     sku: '',
   };
 
-  // products: IProduct[] = [
-  //   { id: 1, name: 'Laptop', sku: 'LP1001' },
-  //   { id: 2, name: 'Keyboard', sku: 'KB1002' },
-  //   { id: 3, name: 'Mouse', sku: 'MS1003' },
-  //   { id: 4, name: 'Monitor', sku: 'MN1004' },
-  //   { id: 5, name: 'Printer', sku: 'PR1005' },
-  // ];
-
   openCreate() {
     this.isEdit = false;
-
     this.currentProduct = {
-      id: 0,
       name: '',
       sku: '',
     };
-
     this.showModal = true;
   }
 
@@ -70,24 +112,5 @@ export class Product {
     this.currentProduct = { ...product };
 
     this.showModal = true;
-  }
-
-  saveProduct() {
-    if (this.isEdit) {
-      const index = this.products.findIndex((p) => p.id === this.currentProduct.id);
-
-      this.products[index] = { ...this.currentProduct };
-    } else {
-      this.products.unshift({
-        ...this.currentProduct,
-        id: Date.now(),
-      });
-    }
-
-    this.closeModal();
-  }
-
-  closeModal() {
-    this.showModal = false;
   }
 }
