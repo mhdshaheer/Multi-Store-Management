@@ -1,0 +1,82 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Stores</h2>
+
+      <p>Manage all stores</p>
+    </div>
+
+    <button class="create-btn" (click)="openCreate()">+ Create Store</button>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search stores..." />
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Store Name</th>
+
+        <th>Address</th>
+
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (store of stores; track store.id) {
+        <tr>
+          <td>{{ store.name }}</td>
+
+          <td>{{ store.address }}</td>
+
+          <td>
+            <button class="edit-btn" (click)="openEdit(store)">Edit</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button>Previous</button>
+
+    <button class="active">1</button>
+
+    <button>2</button>
+
+    <button>3</button>
+
+    <button>Next</button>
+  </div>
+</div>
+
+@if (showModal) {
+  <div class="overlay">
+    <div class="modal">
+      <h3>
+        {{ isEdit ? 'Edit Store' : 'Create Store' }}
+      </h3>
+
+      <div class="field">
+        <label>Store Name</label>
+
+        <input [(ngModel)]="currentStore.name" placeholder="Enter store name" />
+      </div>
+
+      <div class="field">
+        <label>Address</label>
+
+        <textarea rows="4" [(ngModel)]="currentStore.address" placeholder="Enter address">
+        </textarea>
+      </div>
+
+      <div class="actions">
+        <button class="cancel" (click)="closeModal()">Cancel</button>
+
+        <button class="save" (click)="saveStore()">Save</button>
+      </div>
+    </div>
+  </div>
+}
