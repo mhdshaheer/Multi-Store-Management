@@ -15,7 +15,7 @@ export class StoreController implements IStoreController {
       res.status(200).json({
         success: true,
         message: "Store is created",
-        store,
+        data: store,
       });
     } catch (error) {
       next(error);
@@ -32,7 +32,7 @@ export class StoreController implements IStoreController {
       res.status(200).json({
         success: true,
         message: "Store data is fetched successfully",
-        store,
+        data: store,
       });
     } catch (error) {
       next(error);
@@ -50,7 +50,7 @@ export class StoreController implements IStoreController {
       res.status(200).json({
         success: true,
         message: "Store data is fetched successfully",
-        stores,
+        data: stores,
         total,
       });
     } catch (error) {
