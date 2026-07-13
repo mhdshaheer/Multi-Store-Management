@@ -1,5 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ILogin } from '../../../../core/models/auth.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +12,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class Login {
   private fb = inject(FormBuilder);
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
   showPassword = false;
 
   loginForm: FormGroup = this.fb.group({
@@ -28,8 +33,19 @@ export class Login {
     }
 
     console.log(this.loginForm.value);
+    const loginData: ILogin = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password,
+    };
 
-    // API Call
-    // this.authService.login(this.loginForm.value).subscribe(...)
+    this._authService.login(loginData).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        this._router.navigate(['/admin/dashboard']);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }
