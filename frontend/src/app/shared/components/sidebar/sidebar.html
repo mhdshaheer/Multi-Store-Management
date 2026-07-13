@@ -1,0 +1,13 @@
+<div class="sidebar">
+  <div class="logo">StockFlow</div>
+
+  <nav>
+    @for (item of menuItems; track item.title) {
+      <a [routerLink]="item.route" routerLinkActive="active">
+        <span>{{ item.icon }}</span>
+
+        {{ item.title }}
+      </a>
+    }
+  </nav>
+</div>

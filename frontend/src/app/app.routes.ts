@@ -13,4 +13,10 @@ export const routes: Routes = [
       return import('../app/features/auth/auth.routes').then((m) => m.AUTH_ROUTES);
     },
   },
+  {
+    path: 'admin',
+    loadChildren: () => {
+      return import('../app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES);
+    },
+  },
 ];
