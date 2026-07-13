@@ -4,8 +4,6 @@
   <nav>
     @for (item of menuItems; track item.title) {
       <a [routerLink]="item.route" routerLinkActive="active">
-        <span>{{ item.icon }}</span>
-
         {{ item.title }}
       </a>
     }

@@ -12,38 +12,19 @@ export class Layout {
   sidebarItems: SidebarItem[] = [
     {
       title: 'Dashboard',
-      icon: '📊',
       route: '/admin/dashboard',
     },
     {
       title: 'Products',
-      icon: '📦',
       route: '/admin/products',
     },
     {
       title: 'Stores',
-      icon: '🏬',
       route: '/admin/stores',
     },
     {
       title: 'Inventory',
-      icon: '📋',
       route: '/admin/stocks',
-    },
-    {
-      title: 'Transfers',
-      icon: '🔄',
-      route: '/admin/transfers',
-    },
-    {
-      title: 'Users',
-      icon: '👥',
-      route: '/admin/users',
-    },
-    {
-      title: 'Settings',
-      icon: '⚙️',
-      route: '/admin/settings',
     },
   ];
 }
