@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-otp',
@@ -8,10 +10,17 @@ import { Component } from '@angular/core';
 })
 export class Otp {
   otp: string[] = ['', '', '', '', '', ''];
+  private _authService = inject(AuthService);
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
 
+  userEmail;
   showAlert = false;
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
+  constructor() {
+    this.userEmail = this._route.snapshot.queryParamMap.get('email') || '';
+  }
 
   onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
@@ -60,12 +69,15 @@ export class Otp {
 
   verifyOTP() {
     const otp = this.otp.join('');
-
-    if (otp === '123456') {
-      this.showNotification('OTP verified successfully.', 'success');
-    } else {
-      this.showNotification('Invalid OTP. Please try again.', 'error');
-    }
+    this._authService.verifyOtp({ otp, email: this.userEmail }).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        this._router.navigate(['/admin/dashboard']);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   resendOTP() {

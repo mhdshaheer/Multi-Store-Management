@@ -80,9 +80,14 @@
       @if (registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched) {
         <small class="error"> Passwords do not match. </small>
       }
-      <button class="register-btn" type="submit" [disabled]="registerForm.invalid">
-        Create Account
-      </button>
+      @if (isLoading) {
+        <button class="register-btn" type="submit" [disabled]="isLoading">Loading...</button>
+      } @else {
+        <button class="register-btn" type="submit" [disabled]="registerForm.invalid">
+          Send Otp
+        </button>
+      }
+
       <p class="footer-text">
         Already have an account?
         <a routerLink="/auth/login"> Sign In </a>

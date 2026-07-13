@@ -24,6 +24,7 @@ export class Register {
 
   showPassword = false;
   showConfirmPassword = false;
+  isLoading = false;
 
   registerForm: FormGroup = this.fb.group(
     {
@@ -64,13 +65,18 @@ export class Register {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
     };
+    this.isLoading = true;
     this._authService.register(registerData).subscribe({
       next: (res) => {
         console.log(res.message);
-        this._router.navigate(['/auth/otp']);
+        this._router.navigate(['/auth/otp'], {
+          queryParams: { email: registerData.email },
+        });
+        this.isLoading = false;
       },
       error: (err) => {
         console.log(err);
+        this.isLoading = false;
       },
     });
   }
