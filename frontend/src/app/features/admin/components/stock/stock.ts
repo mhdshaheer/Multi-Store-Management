@@ -1,25 +1,20 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IStock } from '../../../../core/models/stock.model';
+import { StockService } from '../../../../core/services/stock.service';
+import { StoreService } from '../../../../core/services/store.service';
+import { ProductService } from '../../../../core/services/product.service';
 
-interface Product {
-  id: number;
+interface ProductList {
+  _id: string;
   name: string;
 }
 
-interface Store {
-  id: number;
+interface StoreList {
+  _id: string;
   name: string;
 }
 
-interface IStock {
-  id: number;
-  productId: number;
-  storeId: number;
-  productName: string;
-  storeName: string;
-  quantity: number;
-  threshold: number;
-}
 @Component({
   selector: 'app-stock',
   imports: [FormsModule],
@@ -27,6 +22,45 @@ interface IStock {
   styleUrl: './stock.css',
 })
 export class Stock {
+  // ================================
+  private _stockService = inject(StockService);
+  private _storeService = inject(StoreService);
+  private _productService = inject(ProductService);
+  private _cdr = inject(ChangeDetectorRef);
+  products: ProductList[] = [];
+  ngOnInit() {
+    this.getProducts();
+    this.getStores();
+  }
+  addStock() {}
+  getProducts() {
+    this._productService.getProducts().subscribe({
+      next: (res) => {
+        res.data?.forEach((item) => {
+          if (item._id) {
+            this.products.push({ _id: item._id, name: item.name! });
+          }
+        });
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  getStores() {
+    this._storeService.getStores().subscribe({
+      next: (res) => {
+        res.data?.forEach((item) => {
+          if (item._id) {
+            this.stores.push({ _id: item._id, name: item.name });
+          }
+        });
+        this._cdr.markForCheck();
+      },
+    });
+  }
+  // ================================
   showModal = false;
   isEdit = false;
   showTransferModal = false;
@@ -34,67 +68,18 @@ export class Stock {
   selectedStock!: IStock;
   transfer = {
     toStoreId: '',
-
     quantity: 0,
   };
 
   selectedProduct = '';
   selectedStore = '';
 
-  products: Product[] = [
-    { id: 1, name: 'Laptop' },
-    { id: 2, name: 'Mouse' },
-    { id: 3, name: 'Keyboard' },
-    { id: 4, name: 'Monitor' },
-  ];
+  stores: StoreList[] = [];
 
-  stores: Store[] = [
-    { id: 1, name: 'Calicut Store' },
-    { id: 2, name: 'Kochi Store' },
-    { id: 3, name: 'Kannur Store' },
-  ];
-
-  stocks: IStock[] = [
-    {
-      id: 1,
-      productId: 1,
-      storeId: 1,
-      productName: 'Laptop',
-      storeName: 'Calicut Store',
-      quantity: 12,
-      threshold: 5,
-    },
-    {
-      id: 2,
-      productId: 2,
-      storeId: 1,
-      productName: 'Mouse',
-      storeName: 'Calicut Store',
-      quantity: 3,
-      threshold: 5,
-    },
-    {
-      id: 3,
-      productId: 3,
-      storeId: 2,
-      productName: 'Keyboard',
-      storeName: 'Kochi Store',
-      quantity: 25,
-      threshold: 10,
-    },
-    {
-      id: 4,
-      productId: 4,
-      storeId: 3,
-      productName: 'Monitor',
-      storeName: 'Kannur Store',
-      quantity: 2,
-      threshold: 5,
-    },
-  ];
+  stocks: IStock[] = [];
 
   currentStock: IStock = {
-    id: 0,
+    _id: '',
     productId: 0,
     storeId: 0,
     productName: '',
@@ -116,7 +101,7 @@ export class Stock {
   openCreate() {
     this.isEdit = false;
     this.currentStock = {
-      id: 0,
+      _id: '',
       productId: 0,
       storeId: 0,
       productName: '',
@@ -137,22 +122,19 @@ export class Stock {
   }
 
   saveStock() {
-    const product = this.products.find((p) => p.id == this.currentStock.productId);
-    const store = this.stores.find((s) => s.id == this.currentStock.storeId);
+    const product = this.products.find((p) => String(p._id) == String(this.currentStock.productId));
+    const store = this.stores.find((s) => String(s._id) == String(this.currentStock.storeId));
     this.currentStock.productName = product?.name || '';
     this.currentStock.storeName = store?.name || '';
 
     if (this.isEdit) {
-      const index = this.stocks.findIndex((s) => s.id === this.currentStock.id);
+      const index = this.stocks.findIndex((s) => s._id === this.currentStock._id);
 
       this.stocks[index] = {
         ...this.currentStock,
       };
     } else {
-      this.stocks.unshift({
-        ...this.currentStock,
-        id: Date.now(),
-      });
+      // create stock ui
     }
 
     this.closeModal();
