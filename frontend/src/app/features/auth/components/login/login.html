@@ -5,31 +5,46 @@
       <p>Sign in to your account</p>
     </div>
 
-    <form (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="form-group">
-        <label for="email">Email</label>
-
-        <input id="email" type="email" placeholder="Enter your email" required />
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="Enter your email" />
+        @if (f['email'].touched && f['email'].invalid) {
+          <small class="error">
+            @if (f['email'].errors?.['required']) {
+              Email is required.
+            }
+            @if (f['email'].errors?.['email']) {
+              Enter a valid email address.
+            }
+          </small>
+        }
       </div>
-
       <div class="form-group">
-        <label for="password">Password</label>
-
+        <label>Password</label>
         <div class="password-wrapper">
           <input
-            id="password"
             [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
             placeholder="Enter your password"
-            required
           />
-
           <button type="button" class="toggle-password" (click)="togglePassword()">
             {{ showPassword ? 'Hide' : 'Show' }}
           </button>
         </div>
+        @if (f['password'].touched && f['password'].invalid) {
+          <small class="error">
+            @if (f['password'].errors?.['required']) {
+              Password is required.
+            }
+            @if (f['password'].errors?.['minlength']) {
+              Password must be at least 6 characters.
+            }
+          </small>
+        }
       </div>
 
-      <button class="login-btn" type="submit">Sign In</button>
+      <button class="login-btn" type="submit" [disabled]="loginForm.invalid">Sign In</button>
 
       <p class="register-text">
         Don't have an account?
