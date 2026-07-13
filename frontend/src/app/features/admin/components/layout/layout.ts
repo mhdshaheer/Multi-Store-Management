@@ -28,7 +28,7 @@ export class Layout {
     {
       title: 'Inventory',
       icon: '📋',
-      route: '/admin/inventory',
+      route: '/admin/stocks',
     },
     {
       title: 'Transfers',
