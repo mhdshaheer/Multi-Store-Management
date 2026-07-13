@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.otp-container {
+  min-height: 100vh;
+
+  background: #f4f4f4;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+}
+
+.notification {
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+
+  padding: 14px 18px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  animation: slide 0.3s ease;
+
+  z-index: 999;
+}
+
+.success {
+  background: #111;
+  color: #fff;
+}
+
+.error {
+  background: #fff;
+  color: #111;
+
+  border: 1px solid #111;
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.otp-card {
+  width: 100%;
+  max-width: 430px;
+
+  background: #fff;
+
+  border-radius: 12px;
+
+  padding: 40px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+  border: 1px solid #e5e5e5;
+
+  text-align: center;
+}
+
+.logo-circle {
+  width: 60px;
+  height: 60px;
+
+  background: #000;
+  color: #fff;
+
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: auto;
+
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo h2 {
+  margin-top: 20px;
+  color: #111;
+}
+
+.logo p {
+  margin: 10px 0 30px;
+  color: #666;
+  font-size: 14px;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+
+  gap: 10px;
+
+  margin-bottom: 30px;
+}
+
+.otp-inputs input {
+  width: 52px;
+  height: 56px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  text-align: center;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+.otp-inputs input:focus {
+  border-color: #000;
+}
+
+.verify-btn {
+  width: 100%;
+
+  padding: 14px;
+
+  background: #000;
+  color: #fff;
+
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.verify-btn:hover {
+  background: #222;
+}
+
+.resend-btn {
+  width: 100%;
+
+  margin-top: 15px;
+
+  padding: 14px;
+
+  background: #fff;
+  color: #000;
+
+  border: 1px solid #000;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.resend-btn:hover {
+  background: #f1f1f1;
+}
+
+@media (max-width: 480px) {
+  .otp-card {
+    padding: 30px 20px;
+  }
+
+  .otp-inputs {
+    gap: 8px;
+  }
+
+  .otp-inputs input {
+    width: 44px;
+    height: 50px;
+  }
+}

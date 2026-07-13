@@ -13,4 +13,10 @@ export const AUTH_ROUTES: Routes = [
       return import('../auth/components/register/register').then((m) => m.Register);
     },
   },
+  {
+    path: 'otp',
+    loadComponent: () => {
+      return import('../auth/components/otp/otp').then((m) => m.Otp);
+    },
+  },
 ];
