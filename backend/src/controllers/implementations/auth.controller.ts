@@ -40,6 +40,7 @@ export class AuthController implements IAuthController {
         email,
         otp,
       });
+
       res.status(201).json({
         success: true,
         message: "Registration Successful",
@@ -74,12 +75,20 @@ export class AuthController implements IAuthController {
         email,
         password,
       });
-      res.cookie("refreshToken", token.accessToken, {
+
+      res.cookie("accessToken", token.accessToken, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 15 * 60 * 1000,
+      });
+      res.cookie("refreshToken", token.refreshToken, {
         httpOnly: true,
         secure: env.NODE_ENV == "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 3 * 24 * 60 * 60 * 1000,
       });
+
       res.status(200).json({
         success: true,
         message: "Login successful.",

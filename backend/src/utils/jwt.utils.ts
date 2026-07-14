@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.config";
 
-export const generateToken = (user_id: string, role: string) => {
+export const generateToken = (user_id: string, role: "ADMIN" | "USER") => {
   const token = jwt.sign(
     {
       id: user_id,
@@ -15,7 +15,10 @@ export const generateToken = (user_id: string, role: string) => {
   return token;
 };
 
-export const generateAccessToken = (user_id: string, role: string) => {
+export const generateAccessToken = (
+  user_id: string,
+  role: "ADMIN" | "USER",
+) => {
   const token = jwt.sign(
     {
       id: user_id,

@@ -12,13 +12,17 @@ export class AuthService {
   private _api = 'http://localhost:5000/api/v1/auth';
 
   login(loginData: ILogin): Observable<ApiResponse<ILogin>> {
-    return this._http.post<ApiResponse<ILogin>>(`${this._api}/login`, loginData);
+    return this._http.post<ApiResponse<ILogin>>(`${this._api}/login`, loginData, {
+      withCredentials: true,
+    });
   }
   logout() {
     return this._http.post(`${this._api}/logout`, {});
   }
   register(registerData: IRegister) {
-    return this._http.post<ApiResponse<IRegister>>(`${this._api}/register`, registerData);
+    return this._http.post<ApiResponse<IRegister>>(`${this._api}/register`, registerData, {
+      withCredentials: true,
+    });
   }
   verifyOtp(verifyData: IVerifyOtp) {
     return this._http.post<ApiResponse<IRegister>>(`${this._api}/verify`, verifyData);

@@ -8,7 +8,12 @@ import stockRouter from "./routes/stock.routes";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:4200",
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
 
