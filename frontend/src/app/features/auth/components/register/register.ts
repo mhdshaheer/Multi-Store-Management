@@ -69,6 +69,7 @@ export class Register {
     this._authService.register(registerData).subscribe({
       next: (res) => {
         console.log(res.message);
+        this._authService.setRole(res.data?.role!);
         this._router.navigate(['/auth/otp'], {
           queryParams: { email: registerData.email },
         });

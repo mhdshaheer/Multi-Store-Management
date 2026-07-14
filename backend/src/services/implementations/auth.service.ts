@@ -12,6 +12,7 @@ import {
   generateToken,
 } from "../../utils/jwt.utils";
 import { LoginDto } from "../../dtos/login.dto";
+import { IUser } from "../../models/user.model";
 
 export class AuthService implements IAuthService {
   constructor(
@@ -58,7 +59,7 @@ export class AuthService implements IAuthService {
   }
   async verifyOtp(
     verifyOtpDto: VerifyOtpDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
     const { email, otp } = verifyOtpDto;
     const redisData = await redis_client.get(`otp:${email}`);
     if (!redisData) {
@@ -82,6 +83,7 @@ export class AuthService implements IAuthService {
     return {
       accessToken: accessToken,
       refreshToken: accessToken,
+      user: createdUser,
     };
   }
 
@@ -115,7 +117,7 @@ export class AuthService implements IAuthService {
   }
   async login(
     loginDto: LoginDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string; user: IUser }> {
     const { email, password } = loginDto;
     const user = await this._userRepository.findByEmail(email);
     if (!user) {
@@ -130,6 +132,7 @@ export class AuthService implements IAuthService {
     return {
       accessToken: accessToken,
       refreshToken: accessToken,
+      user,
     };
   }
 }
