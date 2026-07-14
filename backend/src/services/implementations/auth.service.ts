@@ -56,7 +56,9 @@ export class AuthService implements IAuthService {
     // Sent mail
     await this._mailService.sendOtp(email, otp);
   }
-  async verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<string> {
+  async verifyOtp(
+    verifyOtpDto: VerifyOtpDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { email, otp } = verifyOtpDto;
     const redisData = await redis_client.get(`otp:${email}`);
     if (!redisData) {
@@ -72,8 +74,15 @@ export class AuthService implements IAuthService {
       password: userData.password,
     });
     await redis_client.del(`otp:${email}`);
-    const token = generateToken(createdUser._id.toString(), createdUser.role);
-    return token;
+    const accessToken = generateAccessToken(
+      createdUser._id.toString(),
+      createdUser.role,
+    );
+    const refreshToken = generateRefreshToken(createdUser._id.toString());
+    return {
+      accessToken: accessToken,
+      refreshToken: accessToken,
+    };
   }
 
   async resendOtp(resendOtpDto: ResendOtpDto): Promise<void> {
