@@ -4,8 +4,9 @@
       <h2>Stock Management</h2>
       <p>Manage stock across all stores</p>
     </div>
-
-    <button class="create-btn" (click)="openCreate()">+ Add Stock</button>
+    @if (currentUser?.role == 'ADMIN') {
+      <button class="create-btn" (click)="openCreate()">+ Add Stock</button>
+    }
   </div>
 
   <!-- Filters -->
@@ -54,8 +55,9 @@
         <th>Threshold</th>
 
         <th>Status</th>
-
-        <th>Action</th>
+        @if (currentUser?.role == 'ADMIN') {
+          <th>Action</th>
+        }
       </tr>
     </thead>
 
@@ -77,90 +79,17 @@
               <span class="badge success"> In Stock </span>
             }
           </td>
-
-          <td>
-            <button class="edit-btn" (click)="openEdit(stock)">Edit</button>
-            <button class="transfer-btn" (click)="openTransfer(stock)">Transfer</button>
-          </td>
+          @if (currentUser?.role == 'ADMIN') {
+            <td>
+              <button class="edit-btn" (click)="openEdit(stock)">Edit</button>
+              <button class="transfer-btn" (click)="openTransfer(stock)">Transfer</button>
+            </td>
+          }
         </tr>
       }
     </tbody>
   </table>
-
-  <!-- Pagination -->
-
-  <div class="pagination">
-    <button>Previous</button>
-
-    <button class="active">1</button>
-
-    <button>2</button>
-
-    <button>3</button>
-
-    <button>Next</button>
-  </div>
 </div>
-
-<!-- Modal -->
-
-<!-- @if (showModal) {
-  <div class="overlay">
-    <div class="modal">
-      <h3>
-        {{ isEdit ? 'Edit Stock' : 'Add Stock' }}
-      </h3>
-
-      <div class="field">
-        <label>Product</label>
-
-        <select [(ngModel)]="currentStock.productId">
-          <option value="">Select Product</option>
-
-          @for (product of products; track product._id) {
-            <option [value]="product._id">
-              {{ product.name }}
-            </option>
-          }
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Store</label>
-
-        <select [(ngModel)]="currentStock.storeId">
-          <option value="">Select Store</option>
-
-          @for (store of stores; track store._id) {
-            <option [value]="store._id">
-              {{ store.name }}
-            </option>
-          }
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Available Stock</label>
-
-        <input type="number" [(ngModel)]="currentStock.quantity" />
-      </div>
-
-      <div class="field">
-        <label>Low Stock Threshold</label>
-
-        <input type="number" [(ngModel)]="currentStock.threshold" />
-      </div>
-
-      <div class="actions">
-        <button class="cancel" (click)="closeModal()">Cancel</button>
-
-        <button class="save" (click)="saveStock()">
-          {{ isEdit ? 'Update' : 'Save' }}
-        </button>
-      </div>
-    </div>
-  </div>
-} -->
 @if (showModal) {
   <div class="overlay">
     <div class="modal">

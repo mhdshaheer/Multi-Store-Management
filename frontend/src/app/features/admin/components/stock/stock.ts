@@ -10,6 +10,8 @@ import { IStock, ITransferStock } from '../../../../core/models/stock.model';
 import { StockService } from '../../../../core/services/stock.service';
 import { StoreService } from '../../../../core/services/store.service';
 import { ProductService } from '../../../../core/services/product.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ICurrentUser } from '../../../../core/models/auth.model';
 
 interface ProductList {
   _id: string;
@@ -32,11 +34,13 @@ export class Stock {
   private _stockService = inject(StockService);
   private _storeService = inject(StoreService);
   private _productService = inject(ProductService);
+  private _authService = inject(AuthService);
   private _cdr = inject(ChangeDetectorRef);
   products: ProductList[] = [];
   stockForm!: FormGroup;
   transferForm!: FormGroup;
   private fb = inject(FormBuilder);
+  currentUser: ICurrentUser | null = null;
   ngOnInit() {
     this.stockForm = this.fb.group({
       productId: ['', Validators.required],
@@ -56,6 +60,17 @@ export class Stock {
     this._stockService.addCreate(stock).subscribe({
       next: (res) => {
         console.log(res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+  getUser() {
+    this._authService.getUser().subscribe({
+      next: (res) => {
+        this.currentUser = { _id: res.data?._id!, role: res.data?.role! };
+        this._cdr.markForCheck();
       },
       error: (err) => {
         console.log(err);

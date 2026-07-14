@@ -11,10 +11,6 @@ import { RouterOutlet } from '@angular/router';
 export class Layout {
   sidebarItems: SidebarItem[] = [
     {
-      title: 'Dashboard',
-      route: '/admin/dashboard',
-    },
-    {
       title: 'Products',
       route: '/admin/products',
     },

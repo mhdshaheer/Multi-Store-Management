@@ -8,6 +8,8 @@ import {
 } from '@angular/forms';
 import { StoreService } from '../../../../core/services/store.service';
 import { IStore } from '../../../../core/models/store.model';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ICurrentUser } from '../../../../core/models/auth.model';
 
 @Component({
   selector: 'app-store',
@@ -18,12 +20,14 @@ import { IStore } from '../../../../core/models/store.model';
 export class Store {
   // ===================================================
   private _storeService = inject(StoreService);
+  private _authService = inject(AuthService)
   private _cdr = inject(ChangeDetectorRef);
   showModal = false;
   isEdit = false;
   currentStoreId = '';
   storeForm: FormGroup;
   stores: IStore[] = [];
+  currentUser:ICurrentUser | null = null
 
   constructor(private fb: FormBuilder) {
     this.storeForm = this.fb.group({
@@ -39,6 +43,17 @@ export class Store {
       next: (res) => {
         console.log(res);
         this.stores = res.data!;
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+   getUser() {
+    this._authService.getUser().subscribe({
+      next: (res) => {
+        this.currentUser = { _id: res.data?._id!, role: res.data?.role! };
         this._cdr.markForCheck();
       },
       error: (err) => {
