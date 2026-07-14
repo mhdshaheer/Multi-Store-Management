@@ -72,7 +72,7 @@ export class Otp {
     this._authService.verifyOtp({ otp, email: this.userEmail }).subscribe({
       next: (res) => {
         console.log(res.message);
-        this._router.navigate(['/admin/dashboard']);
+        this._router.navigate(['/admin/products']);
       },
       error: (err) => {
         console.log(err);

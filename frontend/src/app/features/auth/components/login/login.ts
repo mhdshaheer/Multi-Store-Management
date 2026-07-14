@@ -41,7 +41,7 @@ export class Login {
     this._authService.login(loginData).subscribe({
       next: (res) => {
         console.log(res.message);
-        this._router.navigate(['/admin/dashboard']);
+        this._router.navigate(['/admin/products']);
       },
       error: (err) => {
         console.log(err);
