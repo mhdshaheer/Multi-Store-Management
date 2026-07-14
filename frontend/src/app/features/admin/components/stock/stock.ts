@@ -39,7 +39,31 @@ export class Stock {
   products: ProductList[] = [];
   stockForm!: FormGroup;
   transferForm!: FormGroup;
+
   private fb = inject(FormBuilder);
+
+  showModal = false;
+  isEdit = false;
+  showTransferModal = false;
+  validationMessage = '';
+  selectedStock!: IStock;
+  transfer = {
+    toStoreId: '',
+    quantity: 0,
+  };
+  selectedProduct = '';
+  selectedStore = '';
+  stores: StoreList[] = [];
+  stocks: IStock[] = [];
+  currentStock: IStock = {
+    _id: '',
+    productId: '',
+    storeId: '',
+    productName: '',
+    storeName: '',
+    quantity: 0,
+    threshold: 0,
+  };
   currentUser: ICurrentUser | null = null;
   ngOnInit() {
     this.stockForm = this.fb.group({
@@ -55,6 +79,7 @@ export class Stock {
     this.getProducts();
     this.getStores();
     this.getStocks();
+    this.getUser();
   }
   addStock(stock: IStock) {
     this._stockService.addCreate(stock).subscribe({
@@ -172,6 +197,17 @@ export class Stock {
       },
     });
   }
+  updateStock(stockId: string, stockData: IStock) {
+    this._stockService.updateStock(stockId, stockData).subscribe({
+      next: (res) => {
+        this.stocks = [...this.stocks, res.data!];
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
   get f() {
     return this.stockForm.controls;
   }
@@ -179,32 +215,6 @@ export class Stock {
     return this.transferForm.controls;
   }
   // ================================
-  showModal = false;
-  isEdit = false;
-  showTransferModal = false;
-  validationMessage = '';
-  selectedStock!: IStock;
-  transfer = {
-    toStoreId: '',
-    quantity: 0,
-  };
-
-  selectedProduct = '';
-  selectedStore = '';
-
-  stores: StoreList[] = [];
-
-  stocks: IStock[] = [];
-
-  currentStock: IStock = {
-    _id: '',
-    productId: '',
-    storeId: '',
-    productName: '',
-    storeName: '',
-    quantity: 0,
-    threshold: 0,
-  };
 
   filteredStocks(): IStock[] {
     return this.stocks.filter((stock) => {
@@ -257,8 +267,7 @@ export class Stock {
       storeName: store?.name ?? '',
     };
     if (this.isEdit) {
-      const index = this.stocks.findIndex((s) => s._id === stock._id);
-      this.stocks[index] = stock;
+      this.updateStock(String(stock._id), stock);
     } else {
       this.addStock(stock);
     }

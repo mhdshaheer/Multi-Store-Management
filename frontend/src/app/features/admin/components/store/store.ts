@@ -20,14 +20,14 @@ import { ICurrentUser } from '../../../../core/models/auth.model';
 export class Store {
   // ===================================================
   private _storeService = inject(StoreService);
-  private _authService = inject(AuthService)
+  private _authService = inject(AuthService);
   private _cdr = inject(ChangeDetectorRef);
   showModal = false;
   isEdit = false;
   currentStoreId = '';
   storeForm: FormGroup;
   stores: IStore[] = [];
-  currentUser:ICurrentUser | null = null
+  currentUser: ICurrentUser | null = null;
 
   constructor(private fb: FormBuilder) {
     this.storeForm = this.fb.group({
@@ -37,6 +37,7 @@ export class Store {
   }
   ngOnInit() {
     this.getStores();
+    this.getUser();
   }
   getStores() {
     this._storeService.getStores().subscribe({
@@ -50,7 +51,7 @@ export class Store {
       },
     });
   }
-   getUser() {
+  getUser() {
     this._authService.getUser().subscribe({
       next: (res) => {
         this.currentUser = { _id: res.data?._id!, role: res.data?.role! };

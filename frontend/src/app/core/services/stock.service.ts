@@ -26,4 +26,9 @@ export class StockService {
       withCredentials: true,
     });
   }
+  updateStock(stockId: string, stockData: IStock) {
+    return this._http.put<ApiResponse<IStock>>(`${this._api}/${stockId}`, stockData, {
+      withCredentials: true,
+    });
+  }
 }
