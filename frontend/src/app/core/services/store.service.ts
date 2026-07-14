@@ -12,9 +12,13 @@ export class StoreService {
   private _api = 'http://localhost:5000/api/v1/store';
 
   getStores(): Observable<ApiResponse<IStore[]>> {
-    return this._http.get<ApiResponse<IStore[]>>(this._api);
+    return this._http.get<ApiResponse<IStore[]>>(this._api, {
+      withCredentials: true,
+    });
   }
   createStore(store: IStore): Observable<ApiResponse<IStore>> {
-    return this._http.post<ApiResponse<IStore>>(this._api, store);
+    return this._http.post<ApiResponse<IStore>>(this._api, store, {
+      withCredentials: true,
+    });
   }
 }

@@ -44,7 +44,7 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 1 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refreshToken", token.refreshToken, {
         httpOnly: true,
@@ -91,7 +91,7 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 1 * 24 * 60 * 60 * 1000,
       });
       res.cookie("refreshToken", token.refreshToken, {
         httpOnly: true,

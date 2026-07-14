@@ -6,13 +6,14 @@ import { adminMiddleware } from "../middlewares/admin.middleware";
 const productRouter = Router();
 productRouter.post(
   "/",
-  // authenticate,
+  authenticate,
   adminMiddleware,
   productController.createProduct.bind(productController),
 );
 productRouter.get(
   "/",
   authenticate,
+  adminMiddleware,
   productController.getProducts.bind(productController),
 );
 productRouter.put(

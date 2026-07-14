@@ -12,12 +12,18 @@ export class StockService {
   private _api = 'http://localhost:5000/api/v1/stock';
 
   addCreate(stock: IStock): Observable<ApiResponse<IStock>> {
-    return this._http.post<ApiResponse<IStock>>(this._api, stock);
+    return this._http.post<ApiResponse<IStock>>(this._api, stock, {
+      withCredentials: true,
+    });
   }
   getStocks(): Observable<ApiResponse<IGetStock[]>> {
-    return this._http.get<ApiResponse<IGetStock[]>>(this._api);
+    return this._http.get<ApiResponse<IGetStock[]>>(this._api, {
+      withCredentials: true,
+    });
   }
   transferStock(transferData: ITransferStock): Observable<ApiResponse<IStock>> {
-    return this._http.post<ApiResponse<IStock>>(`${this._api}/transfer`, transferData);
+    return this._http.post<ApiResponse<IStock>>(`${this._api}/transfer`, transferData, {
+      withCredentials: true,
+    });
   }
 }
