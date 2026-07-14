@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IProduct } from '../../../../core/models/product.model';
 import { ProductService } from '../../../../core/services/product.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { AsyncPipe } from '@angular/common';
+import { ICurrentUser } from '../../../../core/models/auth.model';
 
 @Component({
   selector: 'app-product',
@@ -14,11 +17,14 @@ export class Product {
   private _fb = inject(FormBuilder);
   private _productService = inject(ProductService);
   private _cdr = inject(ChangeDetectorRef);
+  private _authService = inject(AuthService);
   products: IProduct[] = [];
   showModal = false;
+  currentUser: ICurrentUser|null =null;
 
   ngOnInit() {
     this.loadProducts();
+    this.getUser();
   }
 
   loadProducts() {
@@ -29,6 +35,17 @@ export class Product {
       },
       error: () => {
         console.log('error while product fetching');
+      },
+    });
+  }
+  getUser() {
+    this._authService.getUser().subscribe({
+      next: (res) => {
+        this.currentUser = { _id: res.data?._id!, role: res.data?.role! };
+        this._cdr.markForCheck();
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authController } from "../container/auth.container";
+import { authenticate } from "../middlewares/auth.middleware";
 
 const authRouter = Router();
 
@@ -8,5 +9,10 @@ authRouter.post("/verify", authController.verifyOtp.bind(authController));
 authRouter.post("/resend", authController.resendOtp.bind(authController));
 authRouter.post("/login", authController.login.bind(authController));
 authRouter.post("/logout", authController.logout.bind(authController));
+authRouter.get(
+  "/me",
+  authenticate,
+  authController.getUser.bind(authController),
+);
 
 export default authRouter;

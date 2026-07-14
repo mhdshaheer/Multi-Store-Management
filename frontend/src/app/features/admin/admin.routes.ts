@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Layout } from './components/layout/layout';
 import { authGuard } from '../../core/guards/auth.guard';
-import { adminGuard } from '../../core/guards/admin.guard';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -13,28 +12,28 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => {
           return import('../admin/components/dashboard/dashboard').then((m) => m.Dashboard);
         },
-        canActivate:[authGuard]
+        canActivate: [authGuard],
       },
       {
         path: 'products',
         loadComponent: () => {
           return import('../admin/components/product/product').then((m) => m.Product);
         },
-        canActivate:[authGuard]
+        canActivate: [authGuard],
       },
       {
         path: 'stores',
         loadComponent: () => {
           return import('../admin/components/store/store').then((m) => m.Store);
         },
-        canActivate:[authGuard]
+        canActivate: [authGuard],
       },
       {
         path: 'stocks',
         loadComponent: () => {
           return import('../admin/components/stock/stock').then((m) => m.Stock);
         },
-        canActivate:[authGuard]
+        canActivate: [authGuard],
       },
     ],
   },

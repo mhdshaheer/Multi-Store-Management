@@ -5,7 +5,9 @@
       <p>Manage all products</p>
     </div>
 
-    <button class="create-btn" (click)="openCreateModal()">+ Create Product</button>
+    @if (currentUser?.role == 'ADMIN') {
+      <button class="create-btn" (click)="openCreateModal()">+ Create Product</button>
+    }
   </div>
 
   <table>
@@ -13,7 +15,9 @@
       <tr>
         <th>Name</th>
         <th>SKU</th>
-        <th>Action</th>
+        @if (currentUser?.role == 'ADMIN') {
+          <th>Action</th>
+        }
       </tr>
     </thead>
 
@@ -23,56 +27,45 @@
           <td>{{ product.name }}</td>
 
           <td>{{ product.sku }}</td>
-
-          <td>
-            <button class="edit-btn" (click)="openEditModal(product)">Edit</button>
-          </td>
+          @if (currentUser?.role == 'ADMIN') {
+            <td>
+              <button class="edit-btn" (click)="openEditModal(product)">Edit</button>
+            </td>
+          }
         </tr>
       }
     </tbody>
   </table>
 
-  <div class="pagination">
-    <button>Previous</button>
-
-    <button class="active">1</button>
-
-    <button>2</button>
-
-    <button>3</button>
-
-    <button>Next</button>
-  </div>
-</div>
-
-@if (showModal) {
-  <div class="overlay">
-    <div class="modal">
-      <h3>
-        {{ isEdit ? 'Edit Product' : 'Create Product' }}
-      </h3>
-      <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
-        <div class="field">
-          <label>Name</label>
-          <input type="text" formControlName="name" />
-          @if (productForm.controls.name.invalid && productForm.controls.name.touched) {
-            <small class="error"> Product name is required. </small>
-          }
-        </div>
-        <div class="field">
-          <label>SKU</label>
-          <input type="text" formControlName="sku" />
-          @if (productForm.controls.sku.invalid && productForm.controls.sku.touched) {
-            <small class="error"> SKU is required. </small>
-          }
-        </div>
-        <div class="actions">
-          <button type="button" class="cancel" (click)="closeModal()">Cancel</button>
-          <button type="submit" class="save" [disabled]="productForm.invalid">
-            {{ isEdit ? 'Update' : 'Save' }}
-          </button>
-        </div>
-      </form>
+  @if (showModal) {
+    <div class="overlay">
+      <div class="modal">
+        <h3>
+          {{ isEdit ? 'Edit Product' : 'Create Product' }}
+        </h3>
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" formControlName="name" />
+            @if (productForm.controls.name.invalid && productForm.controls.name.touched) {
+              <small class="error"> Product name is required. </small>
+            }
+          </div>
+          <div class="field">
+            <label>SKU</label>
+            <input type="text" formControlName="sku" />
+            @if (productForm.controls.sku.invalid && productForm.controls.sku.touched) {
+              <small class="error"> SKU is required. </small>
+            }
+          </div>
+          <div class="actions">
+            <button type="button" class="cancel" (click)="closeModal()">Cancel</button>
+            <button type="submit" class="save" [disabled]="productForm.invalid">
+              {{ isEdit ? 'Update' : 'Save' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-}
+  }
+</div>

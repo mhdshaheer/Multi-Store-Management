@@ -120,4 +120,23 @@ export class AuthController implements IAuthController {
       next(error);
     }
   }
+  async getUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const userData = {
+        _id: req.user?.id,
+        role: req.user?.role,
+      };
+      res.status(200).json({
+        success: true,
+        message: "user data is fetched",
+        data: userData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

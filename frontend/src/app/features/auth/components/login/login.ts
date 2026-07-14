@@ -41,7 +41,6 @@ export class Login {
     this._authService.login(loginData).subscribe({
       next: (res) => {
         console.log(res.message);
-        this._authService.setRole(res.data?.role!);
         this._router.navigate(['/admin/dashboard']);
       },
       error: (err) => {

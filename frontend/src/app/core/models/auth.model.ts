@@ -13,3 +13,7 @@ export interface IVerifyOtp {
   email: string;
   otp: string;
 }
+export interface ICurrentUser {
+  _id: string;
+  role: 'ADMIN' | 'USER';
+}
